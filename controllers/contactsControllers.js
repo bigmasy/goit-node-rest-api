@@ -28,8 +28,7 @@ export const deleteContact = async (req, res, next) => {
 };
 
 export const createContact = async (req, res) => {
-  const { name, email, phone } = req.body;
-  const contact = await contactsService.addContact(name, email, phone);
+  const contact = await contactsService.addContact(req.body);
 
   res.status(201).json(contact);
 };
@@ -38,6 +37,16 @@ export const updateContact = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
   const contact = await contactsService.updateContactById(id, data);
+  if (!contact) {
+    throw HttpError(404, `Contact with id=${id} not found`);
+  }
+
+  res.json(contact);
+};
+
+export const updateStatusContact = async (req, res) => {
+  const { id } = req.params;
+  const contact = await contactsService.updateContactStatusById(id, req.body);
   if (!contact) {
     throw HttpError(404, `Contact with id=${id} not found`);
   }

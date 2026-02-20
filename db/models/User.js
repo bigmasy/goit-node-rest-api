@@ -1,11 +1,10 @@
 import { DataTypes } from "sequelize";
 
 import sequelize from "../sequelize.js";
-
 import { emailRegexp } from "../../constants/authConstants.js";
 
-const Contact = sequelize.define("contact", {
-  name: {
+const User = sequelize.define("user", {
+  password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -17,23 +16,20 @@ const Contact = sequelize.define("contact", {
     },
     unique: {
       args: true,
-      msg: "email already exist",
+      msg: "Email in use",
     },
   },
-  phone: {
+  subscription: {
+    type: DataTypes.ENUM,
+    values: ["starter", "pro", "business"],
+    defaultValue: "starter",
+  },
+  token: {
     type: DataTypes.STRING,
-    allowNull: false,
-  },
-  favorite: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
-  user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+    defaultValue: null,
   },
 });
 
-// Contact.sync({ alter: true });
+// User.sync({ alter: true });
 
-export default Contact;
+export default User;

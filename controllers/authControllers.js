@@ -20,19 +20,26 @@ export const logoutController = async (req, res) => {
 };
 
 export const getCurrentController = async (req, res) => {
-  const { email, subscription } = req.user;
-  res.json({ email, subscription });
+  const { email, subscription, avatarURL } = req.user;
+  res.json({ email, subscription, avatarURL });
 };
 
 export const subscriptionController = async (req, res) => {
-  const { id } = req.user;
   const { subscription } = req.body;
 
-  const user = await User.findByPk(id);
-  await user.update({ subscription });
+  const result = await authServices.updateSubscription(req.user, subscription);
+
+  res.json(result);
+};
+
+export const updateAvatarController = async (req, res) => {
+  if (!req.file) {
+    throw HttpError(400, "Avatar file is required");
+  }
+
+  const avatarURL = await authServices.updateUserAvatar(req.user, req.file);
 
   res.json({
-    email: user.email,
-    subscription: user.subscription,
+    avatarURL: avatarURL,
   });
 };

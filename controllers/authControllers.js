@@ -14,6 +14,18 @@ export const loginController = async (req, res) => {
   res.json(result);
 };
 
+export const verifyUserController = async (req, res) => {
+  const { verificationToken } = req.params;
+  await authServices.verifyUser(verificationToken);
+  return res.status(200).json({ message: "Verification successful" });
+};
+
+export const resendVerificationController = async (req, res) => {
+  const { email } = req.body;
+  const result = await authServices.resendVerify(email);
+  res.status(200).json({ message: "Verification email sent" });
+};
+
 export const logoutController = async (req, res) => {
   await authServices.logoutUser(req.user);
   res.status(204).send();

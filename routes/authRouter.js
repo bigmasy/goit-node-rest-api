@@ -1,6 +1,10 @@
 import express from "express";
 import validateBody from "../helpers/validateBody.js";
-import { authLoginSchema, authRegisterSchema } from "../schemas/authSchemas.js";
+import {
+  authLoginSchema,
+  authRegisterSchema,
+  resendVerificationSchema,
+} from "../schemas/authSchemas.js";
 import { updateSubscriptionSchema } from "../schemas/subscriptionUpdateSchemas.js";
 import * as authController from "../controllers/authControllers.js";
 import authenticate from "../middlewares/authenticate.js";
@@ -18,6 +22,16 @@ authRouter.post(
   "/login",
   validateBody(authLoginSchema),
   authController.loginController,
+);
+authRouter.get(
+  "/verify/:verificationToken",
+  authController.verifyUserController,
+);
+
+authRouter.post(
+  "/verify",
+  validateBody(resendVerificationSchema),
+  authController.resendVerificationController,
 );
 
 authRouter.post("/logout", authenticate, authController.logoutController);
